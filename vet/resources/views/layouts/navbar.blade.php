@@ -62,7 +62,5 @@
         </div>
     </nav>
 
-    <!-- Other Page Content -->
-
 </body>
 </html>

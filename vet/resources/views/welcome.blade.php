@@ -4,7 +4,7 @@
     <section id="Home" class="flex flex-col-reverse md:flex-row items-center max-w-full mx-auto px-6 md:px-16 pt-20 space-y-4 md:space-y-6 md:space-x-4">
         <!-- Content -->
         <div class="md:w-1/2 md:text-center">
-            <h1 class="text-3xl md:text-5xl font-bold text-black leading-tight">
+            <h1 class="text-3xl md:text-5xl font-bold text-black leading-tight transition ease-in-out delay-150 hover:translate-y-1 hover:scale-110">
                 Your Best Option for Pet Care Solutions
             </h1>
             <p class="mt-6 text-lg md:text-xl text-gray-700 py-6">
@@ -14,8 +14,8 @@
             </p>
 
             <!-- Get Started -->
-            <div class="mt-6">
-                <a href="#" class="text-lg bg-black hover:bg-blue-500 text-white px-6 py-3 rounded shadow">
+            <div class="mt-6 transition ease-in-out delay-150 hover:translate-y-1 hover:scale-110">
+                <a href="#" class="text-lg bg-blue-500 hover:bg-black text-white px-6 py-3 rounded shadow">
                     Get Started
                 </a>
             </div>
@@ -29,7 +29,7 @@
 
    <!-- Offers Section -->
     <section id="Offers" class="mx-auto py-4 px-10 bg-blue-400">
-        <h2 class="font-bold mt-4 text-center text-5xl text-white leading-tight">
+        <h2 class="font-bold mt-4 text-center text-5xl text-white leading-tight transition ease-in-out delay-150 hover:translate-y-1 hover:scale-110">
             What Does Our Website Offer?
         </h2>
 
@@ -61,15 +61,15 @@
     <!-- Abou Us -->
     <section id="About" class="flex flex-col-reverse md:flex-row">
         <div class="pt-28 w-full">
-            <img src="{{ asset('images/cat.png') }}" alt="">
+            <img " src="{{ asset('images/cat.png') }}" alt="">
         </div>
 
         <div class="mx-28">
             <h2 class="font-bold text-5xl mt-28 p-4 text-center">
-                Know More About Our Website 
+                Know More About Our Website
             </h2>
 
-            <p class="mt-20 text-lg px-32 text-justify">
+            <p class="mt-20 text-lg px-16 text-justify">
                 SymptoVet is designed to simplify pet care by offering a seamless way for pet owners to connect with nearby
                 vet clinics. Our platform allows you to quickly find the best available clinics, book appoinments, and access expert
                 advice for your pet's health. Wetherit's routine care or an emergency, we're here to ensure your pets
@@ -78,7 +78,7 @@
         </div>
     </section>
 
-    
+
 </body>
 
 <script>
