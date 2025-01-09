@@ -30,7 +30,7 @@
             </div>
 
             <!-- Desktop Menu -->
-            <ul class="hidden md:flex text-lg space-x-6">
+            <ul class="hidden md:flex text-lg space-x-6 scroll-smooth">
                 <li><a href="#Home" class="hover:bg-blue-500 hover:text-white px-4 py-2 rounded">Home</a></li>
                 <li><a href="#Offers" class="hover:bg-blue-500 hover:text-white px-4 py-2 rounded">Offers</a></li>
                 <li><a href="#About" class="hover:bg-blue-500 hover:text-white px-4 py-2 rounded">About</a></li>

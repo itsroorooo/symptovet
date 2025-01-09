@@ -94,7 +94,7 @@
                     <!-- Register Link -->
                     <p class="text-gray-800 text-sm text-center mt-6">
                         Don't have an account?
-                        <a href="{{ route('register') }}" class="text-blue-600 font-semibold hover:underline">Register</a>
+                        <a href="{{ route('register') }}" class="text-blue-600 font-semibold hover:underline">Create</a>
                     </p>
 
                     <!-- OR Separator -->
@@ -123,22 +123,5 @@
 
 </body>
 
-<script>
-    // Password Toggle Visibility
-    document.addEventListener("DOMContentLoaded", function () {
-        const togglePassword = document.getElementById('togglePassword');
-        if (togglePassword) {
-            togglePassword.addEventListener('click', function () {
-                const passwordInput = document.getElementById('password');
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    this.src = "{{ asset('images/hide.png') }}"; // Change to "eye-slash" icon when visible
-                } else {
-                    passwordInput.type = 'password';
-                    this.src = "{{ asset('images/eye.png') }}"; // Change back to "eye" icon when hidden
-                }
-            });
-        }
-    });
-</script>
+
 </html>
