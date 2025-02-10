@@ -1,101 +1,152 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import AuthModal from "../components/modals";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  return (
+    <>
+      {/* Navbar Section */}
+      <nav className="bg-gray-900 text-white fixed top-0 left-0 w-full z-50 shadow-md shadow-blue-300">
+        <div className="flex items-center justify-between p-4 px-6 md:px-12">
+          <div className="flex items-center space-x-2">
+            <img
+              className="w-14 h-auto"
+              src="/Logoblue.png"
+              alt="SymptoVet Logo"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <span className="text-2xl font-bold">
+              <span className="text-white">Sympto</span>
+              <span className="text-blue-500">Vet</span>
+            </span>
+          </div>
+
+          <ul className="hidden md:flex text-lg space-x-6">
+            <li>
+              <a
+                href="#Home"
+                className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded"
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="#Offers"
+                className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded"
+              >
+                Offers
+              </a>
+            </li>
+            <li>
+              <a
+                href="#About"
+                className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded"
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="#Contact"
+                className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded"
+              >
+                Contact
+              </a>
+            </li>
+          </ul>
+
+          {/* Login & Register Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Login Button */}
+            <span
+              onClick={() => {
+                setIsModalOpen(true);
+                setIsRegister(false);
+              }}
+              className="text-lg hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer"
+            >
+              Login
+            </span>
+
+            <span className="text-white px-2"> | </span>
+
+            {/* Register Button */}
+            <span
+              onClick={() => {
+                setIsModalOpen(true);
+                setIsRegister(true);
+              }}
+              className="text-lg hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer"
+            >
+              Register
+            </span>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+      </nav>
+
+      {/* Home Section */}
+      <section
+        id="Home"
+        className="flex flex-col md:flex-row items-center max-w-full mx-auto px-6 md:px-16 pt-18 space-y-4 md:space-y-6 md:space-x-4"
+      >
+        {/* Content */}
+        <div className="md:w-1/2 lg:w-1/2 mt-40 text-center md:text-left">
+          <h1 className="text-3xl md:text-5xl font-bold text-black leading-tight">
+            Your Best Option for Pet Care Solutions
+          </h1>
+
+          <p className="mt-6 text-justify text-lg md:text-xl text-gray-700 py-6">
+            Where health is best! Our platform instantly connects you to pet
+            care solutions, ensuring your furry friends receive the attention
+            they need right at home. Experience peace of mind knowing that, with
+            us, your pets are always just a step away from the care they
+            deserve, keeping tails waggin and hearts happy!
+          </p>
+
+          {/* Get Started Button */}
+          <div className="mt-6 flex justify-center transition ease-in-out delay-100 hover:translate-y-1 hover:scale-110">
+            <a
+              href="#"
+              className="text-lg bg-blue-500 hover:bg-black text-white px-6 py-4 rounded shadow"
+            >
+              Get Started
+            </a>
+          </div>
+        </div>
+
+        {/* Image */}
+        <div className="md:w-1/2 flex justify-center items-center px-6 md:px-12 pt-8 translate-y-10 transition-all duration-700 ease-out- scroll-trigger">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src="/panda.png"
+            width={900}
+            height={500}
+            alt="Panda and Pets"
+            quality={100}
+            className="object-contain"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </div>
+      </section>
+
+      {/* Offers Section */}
+      <section id="Offers" className="mx-auto py-8 px-20">
+        {/* Header */}
+        <h2 className="font-bold mt-6 text-center text-5xl text-black leading-tight translate-y-10 transition-all duration-700 ease-out scroll-trigger">
+          What Does Our Website Offers?
+        </h2>
+      </section>
+
+      {/* Authentication Modal */}
+      <AuthModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        isRegister={isRegister}
+        setIsRegister={setIsRegister}
+      />
+    </>
   );
 }
