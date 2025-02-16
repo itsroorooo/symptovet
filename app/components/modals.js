@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // App Router
 import Image from "next/image";
 
 export default function AuthModal({
@@ -10,6 +11,33 @@ export default function AuthModal({
   setIsRegister,
 }) {
   if (!isOpen) return null;
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter(); // Use Next.js Router
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Simulate authentication (Replace with actual API call)
+      const isAuthenticated = true; // Replace this with real logic
+
+      if (isAuthenticated) {
+        console.log("Authentication successful!");
+        router.push("/user/dashboard"); // Redirect to user dashboard
+        onClose(); // Close the modal
+      } else {
+        alert("Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -43,7 +71,7 @@ export default function AuthModal({
               </h3>
             </div>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               {/* Name Input (Only for Register) */}
               {isRegister && (
                 <div className="mb-4 relative">
@@ -60,6 +88,8 @@ export default function AuthModal({
               <div className="mb-4 relative">
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Email Address"
@@ -70,6 +100,8 @@ export default function AuthModal({
               <div className="mb-4 relative">
                 <input
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Password"
@@ -111,11 +143,16 @@ export default function AuthModal({
               <button
                 type="submit"
                 className="w-full py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 text-lg font-semibold shadow-md transition duration-300"
+                disabled={loading}
               >
-                {isRegister ? "Get Started" : "Login"}
+                {loading
+                  ? "Processing..."
+                  : isRegister
+                  ? "Get Started"
+                  : "Login"}
               </button>
 
-              {/* OR Separator*/}
+              {/* OR Separator */}
               <div className="flex items-center justify-center my-4">
                 <hr className="w-full border-gray-300" />
                 <span className="mx-2 text-gray-500 font-medium">or</span>
@@ -140,7 +177,7 @@ export default function AuthModal({
                   src="/facebook.png"
                   width={20}
                   height={20}
-                  alt="Google Logo"
+                  alt="Facebook Logo"
                   className="mr-2"
                 />
                 {isRegister ? "Create with Facebook" : "Login with Facebook"}
