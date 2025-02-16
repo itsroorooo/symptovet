@@ -51,7 +51,7 @@ export default function AuthModal({
         </button>
 
         {/* Modal Layout */}
-        <div className="grid md:grid-cols-2 items-center gap-6">
+        <div className="grid md:grid-cols-2 items-center gap-4">
           {/* Left Side (Image) */}
           <div className="hidden md:flex items-center justify-center w-full h-full overflow-hidden">
             <Image
