@@ -53,12 +53,12 @@ export default function AuthModal({
         {/* Modal Layout */}
         <div className="grid md:grid-cols-2 items-center gap-6">
           {/* Left Side (Image) */}
-          <div className="hidden md:flex items-center justify-center w-full">
+          <div className="hidden md:flex items-center justify-center w-full h-full overflow-hidden">
             <Image
-              src="/veterinary.jpg"
-              width={500}
-              height={500}
-              className="w-full h-auto max-h-[550px] object-cover rounded-lg"
+              src="/dog_and_cat.png"
+              width={1000}
+              height={1000}
+              className="w-full h-full max-h-[550px] object-cover rounded-lg"
               alt="Vet Illustration"
             />
           </div>
@@ -74,12 +74,18 @@ export default function AuthModal({
             <form onSubmit={handleSubmit}>
               {/* Name Input (Only for Register) */}
               {isRegister && (
-                <div className="mb-4 relative">
+                <div className="mb-4 relative flex gap-4">
                   <input
                     type="text"
                     required
-                    className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
-                    placeholder="Enter your name"
+                    className="w-1/2 text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
+                    placeholder="First name"
+                  />
+                  <input
+                    type="text"
+                    required
+                    className="w-1/2 text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
+                    placeholder="Last name"
                   />
                 </div>
               )}
