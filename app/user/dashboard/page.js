@@ -1,6 +1,12 @@
+"use client";
+
 import Image from "next/image";
+import React, { useState, useEffect } from "react";
+import SymptomsList from "./SymptomList.js"; // Import the SymptomsList component
 
 const Dashboard = () => {
+  const [requiredEquipment, setRequiredEquipment] = useState([]);
+
   return (
     <div className="font-[Poppins] h-screen">
       {/* Sidebar Container */}
@@ -283,6 +289,9 @@ const Dashboard = () => {
           </div>
         </div>
       </header>
+
+      {/* Main Content */}
+      <SymptomsList onSubmit={setRequiredEquipment} />
     </div>
   );
 };
