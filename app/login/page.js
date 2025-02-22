@@ -39,7 +39,7 @@ export default function Login() {
           {/* Left Side (Image) */}
           <div className="hidden md:flex items-center justify-center w-full h-full overflow-hidden">
             <Image
-              src="/dog_and_cat.png"
+              src="/image/dog_and_cat.png"
               width={1000}
               height={1000}
               className="w-full h-full max-h-[550px] object-cover rounded-lg"
