@@ -16,7 +16,7 @@ export default function Home() {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <Image
-              src="/Logoblue.png"
+              src="/image/Logoblue.png"
               width={56}
               height={56}
               alt="SymptoVet Logo"
@@ -28,7 +28,7 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Desktop Navigation (Centered) */}
+          {/* Desktop Navigation */}
           <div className="hidden md:flex flex-1 justify-center">
             <ul className="flex items-center text-lg space-x-8">
               {["Home", "Offers", "About", "Contact"].map((item, index) => (
