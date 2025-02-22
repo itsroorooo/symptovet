@@ -200,8 +200,10 @@ export default function Home() {
                 <p className="text-sm text-gray-500 mt-1">CEO</p>
 
                 <div className="space-x-4 mt-6">
-                  <button
-                    type="button"
+                  <a
+                    href="https://www.facebook.com/itsroorooo"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-7 h-7 inline-flex items-center justify-center rounded-full border-none outline-none bg-gray-100 hover:bg-200"
                   >
                     <svg
@@ -215,9 +217,11 @@ export default function Home() {
                         data-original="#010002"
                       />
                     </svg>
-                  </button>
-                  <button
-                    type="button"
+                  </a>
+                  <a
+                    href="https://github.com/itsroorooo"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-7 h-7 inline-flex items-center justify-center rounded-full border-none outline-none bg-gray-100 hover:bg-gray-200"
                   >
                     <svg
@@ -231,9 +235,11 @@ export default function Home() {
                         data-original="#000000"
                       />
                     </svg>
-                  </button>
-                  <button
-                    type="button"
+                  </a>
+                  <a
+                    href="https://www.instagram.com/rgb.roro/"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-7 h-7 inline-flex items-center justify-center rounded-full border-none outline-none bg-gray-100 hover:bg-gray-200"
                   >
                     <svg
@@ -247,7 +253,7 @@ export default function Home() {
                         data-original="#000000"
                       />
                     </svg>
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
