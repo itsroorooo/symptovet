@@ -257,7 +257,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="bg-white rounded-lg p-6 shadow-md hover:scale-106 transtion-all duration-500">
+            <div className="bg-white rounded-lg p-6 shadow-md hover:scale-105 transition-all duration-500">
               <div className="lg:min-h-[250px]">
                 <Image
                   src="/image/megan.jpg"
