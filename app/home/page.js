@@ -149,7 +149,7 @@ export default function Home() {
           {/* First Image */}
           <div className="w-96 h-96  relative z-10 flex overflow-hidden rounded-lg shadow-lg ml-44">
             <Image
-              src="/image/kuromi.jpg"
+              src="/image/deku.jpg"
               width={500}
               height={400}
               alt="Baby dog color black"
@@ -161,9 +161,9 @@ export default function Home() {
           {/* Second Image (Overlapping) */}
           <div className="w-96 h-96 absolute top-1/4 left-1/2 transform -translate-y-1/5 -translate-x-1/5 z-20 rounded-lg shadow-lg overflow-hidden">
             <Image
-              src="/image/kuromi.jpg" // Replace with your image path
-              width={384} // Match the width of the container (w-96 = 24rem = 384px)
-              height={384} // Match the height of the container (h-96 = 24rem = 384px)
+              src="/image/kuromi.jpg"
+              width={384}
+              height={384}
               alt="About Us Pets 2"
               quality={100}
               className="object-cover w-full h-full"
