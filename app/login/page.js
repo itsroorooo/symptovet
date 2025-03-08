@@ -93,7 +93,7 @@ export default function Login() {
                 Remember me
               </label>
               <a
-                href="#"
+                href="/forgot-password"
                 className="text-blue-600 font-semibold hover:underline"
               >
                 Forgot Password?

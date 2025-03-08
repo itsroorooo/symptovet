@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Register() {
   const [fname, setFname] = useState("");
@@ -15,9 +16,27 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [captchaValue, setCaptchaValue] = useState(null);
 
   const router = useRouter();
   const supabase = createClient();
+
+  const handleCaptchaChange = (value) => {
+    setCaptchaValue(value);
+  };
+
+  const verifyCaptcha = async (token) => {
+    const response = await fetch("/api/verify-captcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ captchaValue: token }),
+    });
+
+    const data = await response.json();
+    return data.success;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
