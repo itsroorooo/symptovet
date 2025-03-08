@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 
-export default function RegisterPage() {
+export default function Register() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [nameError, setnameError] = useState(false);
 
   const router = useRouter();
   const supabase = createClient();
@@ -23,35 +23,46 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
 
+    // Reset errors
+    setEmailError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+
     // Validation rules
-    if (!email || !password) {
-      aleter("Please fill in all fields.");
+    if (!email || !password || !confirmPassword) {
+      alert("Please fill in all fields.");
       setLoading(false);
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
-      alert("Please enter a valid email address.");
+      setEmailError("Please enter a valid email address.");
       setLoading(false);
       return;
     }
 
     if (password.length < 8) {
-      alert("Password must be atleast 8 characters long.");
+      setPasswordError("Password must be at least 8 characters long.");
       setLoading(false);
       return;
     }
 
-    if (password !== e.target.confirmPassword.value) {
-      alert("Password do not match.");
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match.");
       setLoading(false);
       return;
     }
 
     try {
-      const { data, error } = await supabase.auth.register({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            first_name: fname,
+            last_name: lname,
+          },
+        },
       });
 
       if (error) throw error;
@@ -108,7 +119,7 @@ export default function RegisterPage() {
                   className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Email Address"
                 />
-                {nameError && (
+                {emailError && (
                   <p className="text-red-500 text-sm mt-1">{emailError}</p>
                 )}
               </div>
@@ -132,6 +143,8 @@ export default function RegisterPage() {
               <div className="mb-4 relative">
                 <input
                   type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Confirm your password"
