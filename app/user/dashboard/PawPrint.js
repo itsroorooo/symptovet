@@ -1,5 +1,5 @@
-// components/PawPrint.js
 "use client";
+
 import React from "react";
 
 export default function PawPrint({ className, color = "#8B4513", size = 10 }) {
