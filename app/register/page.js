@@ -3,29 +3,94 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { createClient } from "@/utils/supabase/client";
+import ReCAPTCHA from "react-google-recaptcha";
 
-export default function RegisterPage() {
+export default function Register() {
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [captchaValue, setCaptchaValue] = useState(null);
+
   const router = useRouter();
+  const supabase = createClient();
+
+  const handleCaptchaChange = (value) => {
+    setCaptchaValue(value);
+  };
+
+  const verifyCaptcha = async (token) => {
+    const response = await fetch("/api/verify-captcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ captchaValue: token }),
+    });
+
+    const data = await response.json();
+    return data.success;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      // Simulate registration (Replace with actual API call)
-      const isRegistered = true; // Replace this with real logic
+    // Reset errors
+    setEmailError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
 
-      if (isRegistered) {
-        console.log("Registration successful!");
-        router.push("/user/dashboard"); // Redirect to user dashboard
-      } else {
-        alert("Registration failed");
-      }
+    // Validation rules
+    if (!email || !password || !confirmPassword) {
+      alert("Please fill in all fields.");
+      setLoading(false);
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: fname,
+            last_name: lname,
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      console.log("Registration successful:", data);
+      router.push("/user/dashboard"); // Redirect to user dashboard
     } catch (error) {
       console.error("Registration error:", error);
+      alert(error.message);
     } finally {
       setLoading(false);
     }
@@ -33,20 +98,9 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg max-w-4xl w-full p-6 h-[600px] relative">
+      <div className="bg-white shadow-lg rounded-lg max-w-sm sm:max-w-md md:max-w-lg p-6 h-auto relative">
         {/* Modal Layout */}
-        <div className="grid md:grid-cols-2 items-center gap-4">
-          {/* Left Side (Image) */}
-          <div className="hidden md:flex items-center justify-center w-full h-full overflow-hidden">
-            <Image
-              src="/dog_and_cat.png"
-              width={1000}
-              height={1000}
-              className="w-full h-full max-h-[550px] object-cover rounded-lg"
-              alt="Vet Illustration"
-            />
-          </div>
-
+        <div className="items-center gap-4">
           {/* Right Side (Form) */}
           <div className="bg-white w-full p-6">
             <div className="text-center mb-4">
@@ -60,12 +114,14 @@ export default function RegisterPage() {
               <div className="mb-4 relative flex gap-4">
                 <input
                   type="text"
+                  onChange={(e) => setFname(e.target.value)}
                   required
                   className="w-1/2 text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="First name"
                 />
                 <input
                   type="text"
+                  onChange={(e) => setLname(e.target.value)}
                   required
                   className="w-1/2 text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Last name"
@@ -82,6 +138,9 @@ export default function RegisterPage() {
                   className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Email Address"
                 />
+                {emailError && (
+                  <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                )}
               </div>
 
               {/* Password Input */}
@@ -94,16 +153,26 @@ export default function RegisterPage() {
                   className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Password"
                 />
+                {passwordError && (
+                  <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+                )}
               </div>
 
               {/* Confirm Password */}
               <div className="mb-4 relative">
                 <input
                   type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                   placeholder="Confirm your password"
                 />
+                {confirmPasswordError && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {confirmPasswordError}
+                  </p>
+                )}
               </div>
 
               {/* Submit Button */}
@@ -125,7 +194,7 @@ export default function RegisterPage() {
               {/* Google button */}
               <button className="w-full flex items-center justify-center py-2 rounded-lg bg-white border border-gray-300 text-gray-800 font-semibold shadow-sm transition-all duration-300 hover:bg-gray-200">
                 <Image
-                  src="/google.png"
+                  src="/image/google.png"
                   width={20}
                   height={20}
                   alt="Google Logo"
@@ -137,7 +206,7 @@ export default function RegisterPage() {
               {/* Facebook button */}
               <button className="w-full flex items-center justify-center py-2 mt-3 rounded-lg bg-white border border-gray-300 text-gray-800 font-semibold shadow-sm transition-all duration-300 hover:bg-gray-200">
                 <Image
-                  src="/facebook.png"
+                  src="/image/facebook.png"
                   width={20}
                   height={20}
                   alt="Facebook Logo"

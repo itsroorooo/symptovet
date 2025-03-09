@@ -2,31 +2,84 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import SymptomsList from "./SymptomList.js"; // Import the SymptomsList component
+import SymptomsList from "./SymptomList.js"; 
 import Link from "next/link";
+import VetMap from "./VetMap.js";
+
 
 const Dashboard = () => {
   const [requiredEquipment, setRequiredEquipment] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to control sidebar visibility
+  const [activeComponent, setActiveComponent] = useState("home"); // State to track active component
+
+  // Toggle sidebar function
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  // Close sidebar on larger screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsSidebarOpen(true); // Always show sidebar on larger screens
+      } else {
+        setIsSidebarOpen(false); // Hide sidebar on smaller screens
+      }
+    };
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Initial check on component mount
+    handleResize();
+
+    // Cleanup event listener on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="font-[Poppins] h-screen">
+      {/* Sidebar Toggle Button (Visible on Mobile) */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 z-50 p-2 bg-gray-900 text-white rounded-md md:hidden"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          ></path>
+        </svg>
+      </button>
+
       {/* Sidebar Container */}
       <div className="flex">
         {/* Sidebar */}
         <aside
           id="sidebar"
-          className="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out"
+          className={`fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 z-40`}
         >
           {/* Logo */}
           <div className="p-4">
             <Image
-              src="/Logoblue.png"
+              src="/img/Logoblue.png"
               alt="SymptoVet Logo"
               width={112}
               height={112}
               className="mx-12 mt-8 w-28 h-28"
             />
           </div>
+
           {/* Text */}
           <div className="px-4">
             <span className="text-3xl font-bold mx-6 pt-4">
@@ -40,6 +93,7 @@ const Dashboard = () => {
             {/* Home Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("home")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -60,6 +114,7 @@ const Dashboard = () => {
             {/* Pet Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("pet")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -83,11 +138,50 @@ const Dashboard = () => {
               Pet
             </a>
 
-            
+            {/* Symptoms Link */}
+             <a
+              href="#"
+              onClick={() => setActiveComponent("symptoms")}
+              className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-white text-lg"
+            >
+              <svg
+                className="w-6 h-6 mr-3 transition duration-200 group-hover:stroke-white"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                  stroke="#2196F3"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition duration-200 group-hover:stroke-white"
+                ></path>
+                <path
+                  d="M12 8V16"
+                  stroke="#2196F3"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition duration-200 group-hover:stroke-white"
+                ></path>
+                <path
+                  d="M8 12H16"
+                  stroke="#2196F3"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition duration-200 group-hover:stroke-white"
+                ></path>
+              </svg>
+              Symptoms
+            </a>
 
             {/* Appointment Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("appointment")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -131,6 +225,7 @@ const Dashboard = () => {
             {/* Logs Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("logs")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -166,6 +261,7 @@ const Dashboard = () => {
             {/* Map Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("map")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-white text-lg"
             >
               <svg
@@ -230,11 +326,11 @@ const Dashboard = () => {
       </div>
 
       {/* Header Section */}
-      <header className="shadow-md py-4 px-10">
+      <header className="shadow-md py-4 px-4 md:px-10">
         <div className="flex items-center justify-between">
-          {/* Title on the Left */}
-          <div className="flex items-center space-x-4 px-64">
-            <h1 className="text-3xl font-bold text-blue-500">Home</h1>
+          {/* Title on the Left (Visible on Mobile) */}
+          <div className="flex items-center space-x-4">
+            <h1 className=" ml-10 text-2xl font-bold text-blue-500">Home</h1>
           </div>
 
           {/* Card on the Right */}
@@ -319,7 +415,14 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <SymptomsList onSubmit={setRequiredEquipment} />
+      <div className="flex-1 flex justify-center items-center ml-0 md:ml-60 p-6">
+        {activeComponent === "symptoms" && <SymptomsList />}
+        {activeComponent === "home" && <div>Home Content</div>}
+        {activeComponent === "pet" && <div>Pet Content</div>}
+        {activeComponent === "appointment" && <div>Appointment Content</div>}
+        {activeComponent === "logs" && <div>Logs Content</div>}
+        {activeComponent === "map" && <VetMap />}
+      </div>
     </div>
   );
 };
