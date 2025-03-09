@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { createClient } from "@/utils/supabase/client"; // Import Supabase client
+import { createClient } from "@/utils/supabase/client";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,15 +12,14 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const router = useRouter();
-  const supabase = createClient(); // Initialize Supabase client
+  const supabase = createClient();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(""); // Reset error message
+    setError("");
 
     try {
-      // Sign in with Supabase
       const { data, error: supabaseError } =
         await supabase.auth.signInWithPassword({
           email,
@@ -32,12 +31,29 @@ export default function Login() {
       }
 
       console.log("Login successful:", data);
-      router.push("/user/dashboard"); // Redirect to dashboard
+      router.push("/user/dashboard");
     } catch (error) {
       console.error("Login error:", error);
-      setError("Invalid credentials. Please try again."); // Set error message
+      if (error.message.includes("Invalid login credentials")) {
+        setError("Invalid email or password. Please try again.");
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOAuthLogin = async (provider) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+      });
+      if (error) throw error;
+      console.log(`${provider} login successful:`, data);
+    } catch (error) {
+      console.error(`${provider} login error:`, error);
+      setError(`Failed to login with ${provider}. Please try again.`);
     }
   };
 
@@ -52,7 +68,6 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            {/* Email Input */}
             <div className="mb-4">
               <input
                 type="email"
@@ -61,10 +76,10 @@ export default function Login() {
                 required
                 className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                 placeholder="Email Address"
+                aria-label="Email Address"
               />
             </div>
 
-            {/* Password Input */}
             <div className="mb-4">
               <input
                 type="password"
@@ -73,22 +88,22 @@ export default function Login() {
                 required
                 className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
                 placeholder="Password"
+                aria-label="Password"
               />
             </div>
 
-            {/* Error Message */}
             {error && (
               <div className="mb-4 text-red-500 text-sm text-center">
                 {error}
               </div>
             )}
 
-            {/* Remember Me / Forgot Password */}
             <div className="flex justify-between items-center mb-4 text-xs sm:text-sm">
               <label className="flex items-center text-gray-700">
                 <input
                   type="checkbox"
                   className="h-4 w-4 text-blue-600 border-gray-300 rounded mr-2"
+                  aria-label="Remember Me"
                 />
                 Remember me
               </label>
@@ -100,11 +115,11 @@ export default function Login() {
               </a>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full py-2 rounded-md text-white bg-blue-600 hover:bg-black text-sm sm:text-lg font-semibold shadow-md transition duration-300 flex justify-center items-center"
               disabled={loading}
+              aria-label="Login"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -113,29 +128,17 @@ export default function Login() {
               )}
             </button>
 
-            {/* OR Separator */}
             <div className="flex items-center justify-center my-4">
               <hr className="w-full border-gray-300" />
               <span className="mx-2 text-gray-500 font-medium">or</span>
               <hr className="w-full border-gray-300" />
             </div>
 
-            {/* Google button */}
             <button
               type="button"
-              onClick={async () => {
-                try {
-                  const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: "google",
-                  });
-                  if (error) throw error;
-                  console.log("Google login successful:", data);
-                } catch (error) {
-                  console.error("Google login error:", error);
-                  setError("Failed to login with Google. Please try again.");
-                }
-              }}
+              onClick={() => handleOAuthLogin("google")}
               className="w-full flex items-center justify-center py-2 rounded-lg bg-white border border-gray-300 text-gray-800 font-semibold shadow-sm transition-all duration-300 hover:bg-gray-300"
+              aria-label="Continue with Google"
             >
               <Image
                 src="/image/google.png"
@@ -147,22 +150,11 @@ export default function Login() {
               Continue with Google
             </button>
 
-            {/* Facebook button */}
             <button
               type="button"
-              onClick={async () => {
-                try {
-                  const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: "facebook",
-                  });
-                  if (error) throw error;
-                  console.log("Facebook login successful:", data);
-                } catch (error) {
-                  console.error("Facebook login error:", error);
-                  setError("Failed to login with Facebook. Please try again.");
-                }
-              }}
+              onClick={() => handleOAuthLogin("facebook")}
               className="w-full flex items-center justify-center py-2 mt-3 rounded-lg bg-white border border-gray-300 text-gray-800 font-semibold shadow-sm transition-all duration-300 hover:bg-gray-300"
+              aria-label="Continue with Facebook"
             >
               <Image
                 src="/image/facebook.png"
@@ -174,7 +166,6 @@ export default function Login() {
               Continue with Facebook
             </button>
 
-            {/* Toggle Between Login & Register */}
             <p className="text-gray-800 text-xs sm:text-sm text-center mt-4">
               Don't have an account?{" "}
               <a

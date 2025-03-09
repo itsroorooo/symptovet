@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import SymptomsList from "./SymptomList.js"; // Import the SymptomsList component
-import VetMap from "./VetMap.js"; 
+import VetMap from "./VetMap.js";
 
 const Dashboard = () => {
   const [requiredEquipment, setRequiredEquipment] = useState([]);
@@ -70,7 +70,7 @@ const Dashboard = () => {
           {/* Logo */}
           <div className="p-4">
             <Image
-              src="/img/Logoblue.png"
+              src="/image/Logoblue.png"
               alt="SymptoVet Logo"
               width={112}
               height={112}
@@ -136,8 +136,8 @@ const Dashboard = () => {
               Pet
             </a>
 
-             {/* Symptoms Link */}
-             <a
+            {/* Symptoms Link */}
+            <a
               href="#"
               onClick={() => setActiveComponent("symptoms")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-white text-lg"
@@ -328,7 +328,7 @@ const Dashboard = () => {
               {/* Avatar Button */}
               <label htmlFor="dropdownToggle">
                 <Image
-                  src="/images/avatar.jpg"
+                  src="/image/megan.jpg"
                   alt="Avatar dropdown"
                   width={48}
                   height={48}

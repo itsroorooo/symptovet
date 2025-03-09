@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
-import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Register() {
   const [fname, setFname] = useState("");
@@ -16,27 +15,10 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [captchaValue, setCaptchaValue] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
 
   const router = useRouter();
   const supabase = createClient();
-
-  const handleCaptchaChange = (value) => {
-    setCaptchaValue(value);
-  };
-
-  const verifyCaptcha = async (token) => {
-    const response = await fetch("/api/verify-captcha", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ captchaValue: token }),
-    });
-
-    const data = await response.json();
-    return data.success;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +30,12 @@ export default function Register() {
     setConfirmPasswordError("");
 
     // Validation rules
+    if (!fname || !lname) {
+      alert("Please fill in your first and last name.");
+      setLoading(false);
+      return;
+    }
+
     if (!email || !password || !confirmPassword) {
       alert("Please fill in all fields.");
       setLoading(false);
@@ -81,16 +69,28 @@ export default function Register() {
             first_name: fname,
             last_name: lname,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
       if (error) throw error;
 
       console.log("Registration successful:", data);
-      router.push("/user/dashboard"); // Redirect to user dashboard
+
+      // Show notification
+      setShowNotification(true);
+
+      // Optionally, redirect after a delay
+      setTimeout(() => {
+        router.push("/user/dashboard");
+      }, 3000);
     } catch (error) {
       console.error("Registration error:", error);
-      alert(error.message);
+      if (error.message.includes("User already registered")) {
+        setEmailError("This email is already registered.");
+      } else {
+        alert(error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -99,9 +99,13 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg max-w-sm sm:max-w-md md:max-w-lg p-6 h-auto relative">
-        {/* Modal Layout */}
+        {showNotification && (
+          <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+            Check your email for verification!
+          </div>
+        )}
+
         <div className="items-center gap-4">
-          {/* Right Side (Form) */}
           <div className="bg-white w-full p-6">
             <div className="text-center mb-4">
               <h3 className="text-2xl font-bold text-blue-500">
@@ -110,7 +114,6 @@ export default function Register() {
             </div>
 
             <form onSubmit={handleSubmit}>
-              {/* Name Input */}
               <div className="mb-4 relative flex gap-4">
                 <input
                   type="text"
@@ -128,7 +131,6 @@ export default function Register() {
                 />
               </div>
 
-              {/* Email Input */}
               <div className="mb-4 relative">
                 <input
                   type="email"
@@ -143,7 +145,6 @@ export default function Register() {
                 )}
               </div>
 
-              {/* Password Input */}
               <div className="mb-4 relative">
                 <input
                   type="password"
@@ -158,7 +159,6 @@ export default function Register() {
                 )}
               </div>
 
-              {/* Confirm Password */}
               <div className="mb-4 relative">
                 <input
                   type="password"
@@ -175,7 +175,6 @@ export default function Register() {
                 )}
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 text-lg font-semibold shadow-md transition duration-300"
@@ -184,14 +183,12 @@ export default function Register() {
                 {loading ? "Processing..." : "Get Started"}
               </button>
 
-              {/* OR Separator */}
               <div className="flex items-center justify-center my-4">
                 <hr className="w-full border-gray-300" />
                 <span className="mx-2 text-gray-500 font-medium">or</span>
                 <hr className="w-full border-gray-300" />
               </div>
 
-              {/* Google button */}
               <button className="w-full flex items-center justify-center py-2 rounded-lg bg-white border border-gray-300 text-gray-800 font-semibold shadow-sm transition-all duration-300 hover:bg-gray-200">
                 <Image
                   src="/image/google.png"
@@ -203,7 +200,6 @@ export default function Register() {
                 Create with Google
               </button>
 
-              {/* Facebook button */}
               <button className="w-full flex items-center justify-center py-2 mt-3 rounded-lg bg-white border border-gray-300 text-gray-800 font-semibold shadow-sm transition-all duration-300 hover:bg-gray-200">
                 <Image
                   src="/image/facebook.png"
@@ -215,7 +211,6 @@ export default function Register() {
                 Create with Facebook
               </button>
 
-              {/* Toggle Between Login & Register */}
               <p className="text-gray-800 text-sm text-center mt-4">
                 Already have an account?{" "}
                 <a
