@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import SymptomsList from "./SymptomList.js"; // Import the SymptomsList component
+import ProfilePage from "./ProfilePage";  
 import Link from "next/link";
 
 const Dashboard = () => {
@@ -234,7 +234,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           {/* Title on the Left */}
           <div className="flex items-center space-x-4 px-64">
-            <h1 className="text-3xl font-bold text-blue-500">Home</h1>
+            <h1 className="text-3xl font-bold text-blue-500"> </h1>
           </div>
 
           {/* Card on the Right */}
@@ -319,7 +319,7 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <SymptomsList onSubmit={setRequiredEquipment} />
+      <ProfilePage onSubmit={setRequiredEquipment} />
     </div>
   );
 };
