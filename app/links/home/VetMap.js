@@ -1,13 +1,12 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import "leaflet/dist/leaflet.css";
 import { createClient } from "@supabase/supabase-js";
-import PawPrint from "./PawPrint";
-
-
+import PawPrint from "../../components/PawPrint";
+import '../../style/App.css';
+import Navbar from "../../components/Navbar";
 
 // Dynamically import Leaflet components
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
@@ -75,7 +74,7 @@ export default function VetMap({ requiredEquipment }) {
                 key={clinic.id}
                 position={[clinic.latitude, clinic.longitude]}
                 eventHandlers={{
-                  click: () => router.push(`./petOwner/clinic/${clinic.id}`),
+                  click: () => router.push(`/clinic/${clinic.id}`),
                 }}
               >
                 <Tooltip>{clinic.name}</Tooltip>
