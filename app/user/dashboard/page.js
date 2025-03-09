@@ -90,8 +90,12 @@ const Dashboard = () => {
           <nav className="mt-24 px-6">
             {/* Home Link */}
             <a
+<<<<<<< Updated upstream
               href="#"
               onClick={() => setActiveComponent("home")}
+=======
+              href="/links/home"
+>>>>>>> Stashed changes
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -388,6 +392,7 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
+<<<<<<< Updated upstream
       <div className="flex-1 flex justify-center items-center ml-0 md:ml-60 p-6">
         {activeComponent === "symptoms" && <SymptomsList />}
         {activeComponent === "home" && <div>Home Content</div>}
@@ -395,6 +400,9 @@ const Dashboard = () => {
         {activeComponent === "appointment" && <div>Appointment Content</div>}
         {activeComponent === "logs" && <div>Logs Content</div>}
         {activeComponent === "map" && <VetMap />}
+=======
+      <div className="try">
+>>>>>>> Stashed changes
       </div>
     </div>
   );
