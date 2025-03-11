@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -35,7 +35,7 @@ export default function Login() {
     } catch (error) {
       console.error("Login error:", error);
       if (error.message.includes("Invalid login credentials")) {
-        setError("Invalid email or password. Please try again.");
+        setError("Incorrect email and password. Please try again.");
       } else {
         setError("An error occurred. Please try again later.");
       }
@@ -74,7 +74,9 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
+                  error ? "border-red-500" : "border-gray-300"
+                }`}
                 placeholder="Email Address"
                 aria-label="Email Address"
               />
@@ -86,14 +88,16 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
+                className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
+                  error ? "border-red-500" : "border-gray-300"
+                }`}
                 placeholder="Password"
                 aria-label="Password"
               />
             </div>
 
             {error && (
-              <div className="mb-4 text-red-500 text-sm text-center">
+              <div className="mb-4 text-red-500 text-sm">
                 {error}
               </div>
             )}
@@ -122,7 +126,7 @@ export default function Login() {
               aria-label="Login"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 "Login"
               )}
