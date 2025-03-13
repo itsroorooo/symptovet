@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Loading from "@/components/Loading";
 
 export default function Register() {
   const [fname, setFname] = useState("");

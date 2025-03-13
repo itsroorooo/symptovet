@@ -4,12 +4,14 @@ import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Loading from "@/components/Loading";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // For form submission
   const [error, setError] = useState("");
+  const [isNavigating, setIsNavigating] = useState(false); // For route navigation
 
   const router = useRouter();
   const supabase = createClient();
@@ -31,7 +33,8 @@ export default function Login() {
       }
 
       console.log("Login successful:", data);
-      router.push("/user/dashboard");
+      setIsNavigating(true); // Show loading spinner during navigation
+      router.push("/user/dashboard"); // Navigate to dashboard
     } catch (error) {
       console.error("Login error:", error);
       if (error.message.includes("Invalid login credentials")) {
@@ -46,6 +49,7 @@ export default function Login() {
 
   const handleOAuthLogin = async (provider) => {
     try {
+      setLoading(true); // Show loading spinner during OAuth login
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
       });
@@ -54,11 +58,16 @@ export default function Login() {
     } catch (error) {
       console.error(`${provider} login error:`, error);
       setError(`Failed to login with ${provider}. Please try again.`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      {/* Loading Spinner for Navigation */}
+      {isNavigating && <Loading />}
+
       <div className="bg-white shadow-lg rounded-lg w-full max-w-sm sm:max-w-md md:max-w-lg p-6 h-auto relative">
         <div className="bg-white w-full p-4 sm:p-6">
           <div className="text-center mb-4">
@@ -96,11 +105,7 @@ export default function Login() {
               />
             </div>
 
-            {error && (
-              <div className="mb-4 text-red-500 text-sm">
-                {error}
-              </div>
-            )}
+            {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
 
             <div className="flex justify-between items-center mb-4 text-xs sm:text-sm">
               <label className="flex items-center text-gray-700">

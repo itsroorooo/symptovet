@@ -9,6 +9,13 @@ export default function Home() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    setIsNavigating(true); // Show loading spinner during navigation
+  };
   // Detect scroll position
   useEffect(() => {
     const handleScroll = () => {
