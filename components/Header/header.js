@@ -80,7 +80,7 @@ export default function Home() {
           {/* Login & Register Buttons (Right Side) */}
           <div className="hidden md:flex items-center space-x-4">
             <span
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/auth/login")}
               className="text-lg hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer"
             >
               Login
@@ -90,7 +90,7 @@ export default function Home() {
               |{" "}
             </span>
             <span
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/auth/register")}
               className="text-lg hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer"
             >
               Register

@@ -3,23 +3,45 @@
 import { createClient } from "@/utils/supabase/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loading from "@/components/Loading";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false); // For form submission
-  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState(""); // For email-specific errors
+  const [passwordError, setPasswordError] = useState(""); // For password-specific errors
   const [isNavigating, setIsNavigating] = useState(false); // For route navigation
+  const [rememberMe, setRememberMe] = useState(false); // For "Remember Me" checkbox
 
   const router = useRouter();
   const supabase = createClient();
 
+  // Load the "Remember Me" preference from localStorage on component mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedRememberMe = localStorage.getItem("rememberMe") === "true";
+      setRememberMe(savedRememberMe);
+    }
+  }, []);
+
+  // Save the "Remember Me" preference to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("rememberMe", rememberMe);
+    }
+  }, [rememberMe]);
+
+  const handleCheckboxChange = () => {
+    setRememberMe(!rememberMe); // Toggle the checkbox state
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setEmailError(""); // Clear previous email errors
+    setPasswordError(""); // Clear previous password errors
 
     try {
       const { data, error: supabaseError } =
@@ -37,10 +59,28 @@ export default function Login() {
       router.push("/user/dashboard"); // Navigate to dashboard
     } catch (error) {
       console.error("Login error:", error);
-      if (error.message.includes("Invalid login credentials")) {
-        setError("Incorrect email and password. Please try again.");
+
+      // Handle specific error cases
+      if (
+        error.status === 400 &&
+        error.message.includes("Invalid login credentials")
+      ) {
+        // Check if the email exists in the database
+        const { data: user, error: userError } = await supabase
+          .from("auth.users") // Replace "users" with your actual table name
+          .select("auth.email")
+          .eq("auth.email", email)
+          .single();
+
+        if (userError || !user) {
+          setEmailError(
+            "This email does not exist. Please check your email or register."
+          );
+        } else {
+          setPasswordError("Incorrect password. Please try again.");
+        }
       } else {
-        setError("An error occurred. Please try again later.");
+        setEmailError("An error occurred. Please try again later.");
       }
     } finally {
       setLoading(false);
@@ -57,7 +97,7 @@ export default function Login() {
       console.log(`${provider} login successful:`, data);
     } catch (error) {
       console.error(`${provider} login error:`, error);
-      setError(`Failed to login with ${provider}. Please try again.`);
+      setEmailError(`Failed to login with ${provider}. Please try again.`);
     } finally {
       setLoading(false);
     }
@@ -77,6 +117,7 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit}>
+            {/* Email Input */}
             <div className="mb-4">
               <input
                 type="email"
@@ -84,13 +125,17 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
-                  error ? "border-red-500" : "border-gray-300"
+                  emailError ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Email Address"
                 aria-label="Email Address"
               />
+              {emailError && (
+                <div className="text-red-500 text-sm mt-1">{emailError}</div>
+              )}
             </div>
 
+            {/* Password Input */}
             <div className="mb-4">
               <input
                 type="password"
@@ -98,19 +143,23 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
-                  error ? "border-red-500" : "border-gray-300"
+                  passwordError ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Password"
                 aria-label="Password"
               />
+              {passwordError && (
+                <div className="text-red-500 text-sm mt-1">{passwordError}</div>
+              )}
             </div>
 
-            {error && <div className="mb-4 text-red-500 text-sm">{error}</div>}
-
-            <div className="flex justify-between items-center mb-4 text-xs sm:text-sm">
+            {/* Remember Me Checkbox */}
+            <div className="flex justify-between items-center mb-4">
               <label className="flex items-center text-gray-700">
                 <input
                   type="checkbox"
+                  checked={rememberMe}
+                  onChange={handleCheckboxChange}
                   className="h-4 w-4 text-blue-600 border-gray-300 rounded mr-2"
                   aria-label="Remember Me"
                 />
@@ -124,6 +173,7 @@ export default function Login() {
               </a>
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               className="w-full py-2 rounded-md text-white bg-blue-600 hover:bg-black text-sm sm:text-lg font-semibold shadow-md transition duration-300 flex justify-center items-center"
@@ -137,6 +187,7 @@ export default function Login() {
               )}
             </button>
 
+            {/* OAuth Login Buttons */}
             <div className="flex items-center justify-center my-4">
               <hr className="w-full border-gray-300" />
               <span className="mx-2 text-gray-500 font-medium">or</span>
@@ -175,10 +226,11 @@ export default function Login() {
               Continue with Facebook
             </button>
 
+            {/* Register Link */}
             <p className="text-gray-800 text-xs sm:text-sm text-center mt-4">
               Don't have an account?{" "}
               <a
-                href="/register"
+                href="/auth/register"
                 className="text-blue-600 font-semibold hover:underline cursor-pointer"
               >
                 Create
