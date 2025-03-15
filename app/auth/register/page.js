@@ -17,9 +17,28 @@ export default function Register() {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [otpSent, setOtpSent] = useState(false); // Track if OTP has been sent
+  const [otp, setOtp] = useState(""); // Store OTP input
+  const [otpError, setOtpError] = useState(""); // OTP error message
 
   const router = useRouter();
   const supabase = createClient();
+
+  // Check if email already exists
+  const checkEmailExists = async (email) => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("email")
+      .eq("email", email)
+      .single();
+
+    if (error && error.code !== "PGRST116") {
+      console.error("Error checking email:", error);
+      return false;
+    }
+
+    return !!data; // Returns true if email exists
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,31 +81,26 @@ export default function Register() {
     }
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // Send 6-digit OTP to the user's email
+      const { data, error } = await supabase.auth.signInWithOtp({
         email,
-        password,
         options: {
           data: {
             first_name: fname,
             last_name: lname,
           },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
+          shouldCreateUser: true, // Ensure a new user is created
         },
       });
 
       if (error) throw error;
 
-      console.log("Registration successful:", data);
-
-      // Show notification
-      setShowNotification(true);
-
-      // Optionally, redirect after a delay
-      setTimeout(() => {
-        router.push("/user/dashboard");
-      }, 3000);
+      console.log("OTP sent:", data);
+      setOtpSent(true); // Show OTP input field
+      setShowNotification(true); // Show success notification
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("OTP sending error:", error);
       if (error.message.includes("User already registered")) {
         setEmailError("This email is already registered.");
       } else {
@@ -97,12 +111,35 @@ export default function Register() {
     }
   };
 
+  const verifyOtp = async () => {
+    setLoading(true);
+    setOtpError("");
+
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: "email",
+      });
+
+      if (error) throw error;
+
+      console.log("OTP verification successful:", data);
+      router.push("/user/dashboard"); // Redirect to dashboard after successful verification
+    } catch (error) {
+      console.error("OTP verification error:", error);
+      setOtpError("Invalid OTP. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-lg rounded-lg max-w-sm sm:max-w-md md:max-w-lg p-6 h-auto relative">
         {showNotification && (
           <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
-            Check your email for verification!
+            OTP sent to your email!
           </div>
         )}
 
@@ -115,6 +152,7 @@ export default function Register() {
             </div>
 
             <form onSubmit={handleSubmit}>
+              {/* First Name and Last Name Inputs */}
               <div className="mb-4 relative flex gap-4">
                 <input
                   type="text"
@@ -132,6 +170,7 @@ export default function Register() {
                 />
               </div>
 
+              {/* Email Input */}
               <div className="mb-4 relative">
                 <input
                   type="email"
@@ -146,6 +185,7 @@ export default function Register() {
                 )}
               </div>
 
+              {/* Password Inputs */}
               <div className="mb-4 relative">
                 <input
                   type="password"
@@ -176,14 +216,44 @@ export default function Register() {
                 )}
               </div>
 
-              <button
-                type="submit"
-                className="w-full py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 text-lg font-semibold shadow-md transition duration-300"
-                disabled={loading}
-              >
-                {loading ? "Processing..." : "Get Started"}
-              </button>
+              {/* OTP Input (Shown after OTP is sent) */}
+              {otpSent && (
+                <div className="mb-4 relative">
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    required
+                    className="w-full text-sm border border-gray-300 rounded-md focus:border-blue-600 px-4 py-2 outline-none"
+                    placeholder="Enter 6-digit OTP"
+                    maxLength={6}
+                  />
+                  {otpError && (
+                    <p className="text-red-500 text-sm mt-1">{otpError}</p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={verifyOtp}
+                    className="w-full py-2 mt-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 text-lg font-semibold shadow-md transition duration-300"
+                    disabled={loading}
+                  >
+                    {loading ? "Verifying..." : "Verify OTP"}
+                  </button>
+                </div>
+              )}
 
+              {/* Submit Button (Hidden after OTP is sent) */}
+              {!otpSent && (
+                <button
+                  type="submit"
+                  className="w-full py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 text-lg font-semibold shadow-md transition duration-300"
+                  disabled={loading}
+                >
+                  {loading ? "Sending OTP..." : "Get Started"}
+                </button>
+              )}
+
+              {/* OAuth Buttons */}
               <div className="flex items-center justify-center my-4">
                 <hr className="w-full border-gray-300" />
                 <span className="mx-2 text-gray-500 font-medium">or</span>
@@ -212,6 +282,7 @@ export default function Register() {
                 Create with Facebook
               </button>
 
+              {/* Login Link */}
               <p className="text-gray-800 text-sm text-center mt-4">
                 Already have an account?{" "}
                 <a
