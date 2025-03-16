@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { CheckCircle, Circle } from "lucide-react";
-import { supabase } from "./supabaseClient";
+import { supabase } from "../dashboard/supabaseClient";
 
 export default function SymptomsList({ onSubmit = () => {} }) {
   const [symptoms, setSymptoms] = useState([]);
@@ -72,9 +72,11 @@ export default function SymptomsList({ onSubmit = () => {} }) {
 
   return (
     <div className="w-full h-screen flex items-center justify-center transition-colors duration-300">
-      <form onSubmit={handleSubmit} className="bg-white w-full max-w-lg p-6 rounded-lg shadow-md transition-colors duration-300">
-        <h1 className="text-2xl font-semibold text-center mb-5">SYMPTOMS LIST</h1>
-        <div className="space-y-2 flex flex-col overflow-y-auto max-h-[400px]">
+      {/* Reduced top padding and margin */}
+      <form onSubmit={handleSubmit} className="bg-white w-full max-w-6xl p-4 rounded-lg shadow-md transition-colors duration-300 mt-2">
+        {/* Reduced margin-bottom for the heading */}
+        <h1 className="text-2xl font-semibold text-center mb-2">SYMPTOMS LIST</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 overflow-y-auto max-h-[400px]">
           {symptoms.map((symptom, index) => (
             <div
               key={symptom.id}
