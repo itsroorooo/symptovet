@@ -1,17 +1,48 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation"; // Next.js Router
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
-  const [isNavOpen, setIsNavOpen] = useState(false); // State for mobile menu
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    setIsNavigating(true); // Show loading spinner during navigation
+  };
+  // Detect scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Smooth scrolling
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setIsNavOpen(false); // Close mobile menu after click
+  };
 
   return (
     <>
       {/* Navbar Section */}
-      <nav className="bg-gray-900 text-white fixed top-0 left-0 w-full z-50 shadow-md shadow-blue-300">
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 shadow-lg shadow-blue-300 ${
+          scrollY > 50 ? "bg-gray-900 text-white  " : "bg-white text-black "
+        }`}
+      >
         <div className="flex items-center justify-between p-4 px-6 md:px-12">
           {/* Logo */}
           <div className="flex items-center space-x-2">
@@ -23,7 +54,9 @@ export default function Home() {
               className="w-14 h-auto"
             />
             <span className="text-2xl font-bold">
-              <span className="text-white">Sympto</span>
+              <span className={`${scrollY > 50 ? "text-white" : "text-black"}`}>
+                Sympto
+              </span>
               <span className="text-blue-500">Vet</span>
             </span>
           </div>
@@ -33,12 +66,12 @@ export default function Home() {
             <ul className="flex items-center text-lg space-x-8">
               {["Home", "Offers", "About", "Contact"].map((item, index) => (
                 <li key={index}>
-                  <a
-                    onClick={() => router.push(`/${item.toLowerCase()}`)}
+                  <button
+                    onClick={() => scrollToSection(item.toLowerCase())}
                     className="hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer"
                   >
                     {item}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -47,14 +80,17 @@ export default function Home() {
           {/* Login & Register Buttons (Right Side) */}
           <div className="hidden md:flex items-center space-x-4">
             <span
-              onClick={() => router.push("/login")}
+              onClick={() => router.push("/auth/login")}
               className="text-lg hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer"
             >
               Login
             </span>
-            <span className="text-white px-2"> | </span>
+            <span className={`${scrollY > 50 ? "text-white" : "text-black"}`}>
+              {" "}
+              |{" "}
+            </span>
             <span
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/auth/register")}
               className="text-lg hover:bg-blue-500 hover:text-white px-4 py-2 rounded cursor-pointer"
             >
               Register

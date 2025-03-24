@@ -20,15 +20,17 @@ export default function ForgotPassword() {
     setMessage("");
 
     try {
+      // Send a password reset email
       const { data, error: supabaseError } =
         await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: `${window.location.origin}/reset-password`, // Redirect URL after password reset
         });
 
       if (supabaseError) {
         throw supabaseError;
       }
 
+      // If successful, show a success message
       setMessage("Password reset email sent. Please check your inbox.");
     } catch (error) {
       console.error("Error sending reset email:", error);
@@ -92,7 +94,7 @@ export default function ForgotPassword() {
             <p className="text-gray-800 text-xs sm:text-sm text-center mt-4">
               Remember your password?{" "}
               <a
-                href="/login"
+                href="/auth/login"
                 className="text-blue-600 font-semibold hover:underline cursor-pointer"
               >
                 Login

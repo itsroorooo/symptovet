@@ -10,12 +10,12 @@ export default function Home() {
     <>
       {/* Home Section */}
       <section
-        id="Home"
-        className="flex flex-col md:flex-row items-center max-w-full mx-auto px-6 md:px-16 pt-18 space-y-4 md:space-y-6 md:space-x-4"
+        id="home"
+        className="flex flex-col md:flex-row items-center max-w-full mx-auto px-6 md:px-16 pt-18 space-y-4 md:space-y-6 md:space-x-4 translate-y-10 transition-all duration-700 ease-out scroll-trigger "
       >
         {/* Content */}
-        <div className="md:w-1/2 lg:w-1/2 mt-40 text-center md:text-left">
-          <h1 className="text-center text-3xl md:text-5xl font-bold text-black leading-tight">
+        <div className="md:w-1/2 lg:w-1/2 mt-40 text-center md:text-left  ">
+          <h1 className="text-center text-3xl md:text-5xl font-bold text-black leading-tight ">
             Your Best Option for Pet Care Solutions
           </h1>
 
@@ -52,7 +52,10 @@ export default function Home() {
       </section>
 
       {/* Offers Section */}
-      <section id="offers" className="mx-auto py-8 px-6 md:px-20">
+      <section
+        id="offers"
+        className="mx-auto py-8 px-6 md:px-20 scroll-smooth md:scroll-auto"
+      >
         <h2 className="font-bold mt-4 text-center text-3xl md:text-5xl text-black leading-tight">
           What Does Our Website Offer?
         </h2>
@@ -108,7 +111,7 @@ export default function Home() {
 
       {/* About Us Section */}
       <section
-        id="About"
+        id="about"
         className="flex flex-col mt-10 md:flex-row items-center mb-12 mx-auto py-12 px-6 md:px-20 bg-gray-50"
       >
         {/* Content (Left Side) */}
