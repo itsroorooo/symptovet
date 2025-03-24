@@ -72,7 +72,7 @@ const Dashboard = () => {
           {/* Logo */}
           <div className="p-4">
             <Image
-              src="/img/Logoblue.png"
+              src="/image/Logoblue.png"
               alt="SymptoVet Logo"
               width={112}
               height={112}
@@ -355,7 +355,7 @@ const Dashboard = () => {
               {/* Avatar Button */}
               <label htmlFor="dropdownToggle">
                 <Image
-                  src="/images/avatar.jpg"
+                  src="/image/default-avatar.png"
                   alt="Avatar dropdown"
                   width={48}
                   height={48}
