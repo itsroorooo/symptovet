@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import './profile.css';
 
-const ProfilePage = () => {
+const ProfilePage = ({ onPhotoChange }) => {
   const [profile, setProfile] = useState({
     firstName: "Rose Ann",
     lastName: "Baqueran",
     username: "roseann123",
     email: "roseann@example.com",
     title: "Software Engineer",
-    photo: "/images/default-avatar.png", // Default avatar image
+    photo: "/image/default-avatar.png", // Default avatar image
   });
 
   // State to toggle between view and edit modes
@@ -31,10 +31,12 @@ const ProfilePage = () => {
     if (file && file.size <= 1 * 1024 * 1024) { // Check if file size is under 1MB
       const reader = new FileReader();
       reader.onloadend = () => {
+        const newPhoto = reader.result;
         setProfile((prevProfile) => ({
           ...prevProfile,
-          photo: reader.result,
+          photo: newPhoto,
         }));
+        onPhotoChange(newPhoto); // Synchronize with the navigation bar
       };
       reader.readAsDataURL(file);
     } else {
@@ -50,7 +52,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="ml-[250px] font-[Poppins] pt-8 pl-8 pr-8 pb-0 bg-gray-100 flex flex-col min-h-[89.5vh]">
+    <div className="ml-[50px] font-[Poppins] pt-8 pl-8 pr-8 pb-0 bg-gray-100 flex flex-col min-h-[80.5vh]">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">Profile</h1>
       
       {/* Profile Container with Flexbox */}
@@ -59,7 +61,7 @@ const ProfilePage = () => {
         {/* Left Side - Upload Photo Section */}
         <div className="w-1/3 flex flex-col items-center border-r pr-6">
           <img
-            src={profile.photo}
+            src={profile.photo || "/image/default-avatar.png"} // Ensure default photo remains
             alt="Profile"
             className="w-64 h-64 rounded-full object-cover mb-4"
           />
