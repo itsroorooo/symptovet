@@ -35,8 +35,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
       {/* Navigation Bar */}
       <nav className="mt-24 px-6">
         {/* Home Link */}
-        <a
-          href="#"
+        <Link
+          href="/user/dashboard/"
           onClick={() => setActiveComponent("home")}
           className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
         >
@@ -53,10 +53,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
             ></path>
           </svg>
           Home
-        </a>
+        </Link>
 
         {/* Pet Link */}
-        <a
+        <Link
           href="#"
           onClick={() => setActiveComponent("pet")}
           className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
@@ -80,11 +80,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
             </g>
           </svg>
           Pet
-        </a>
+        </Link>
 
         {/* Symptoms Link */}
-        <a
-          href="#"
+        <Link
+          href="/user/symptoms/"
           onClick={() => setActiveComponent("symptoms")}
           className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-white text-lg"
         >
@@ -120,11 +120,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
             ></path>
           </svg>
           Symptoms
-        </a>
+        </Link>
 
         {/* Appointment Link */}
-        <a
-          href="#"
+        <Link
+          href="/user/appointment/"
           onClick={() => setActiveComponent("appointment")}
           className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
         >
@@ -164,11 +164,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
             ></path>
           </svg>
           Appointment
-        </a>
+        </Link>
 
         {/* Logs Link */}
-        <a
-          href="#"
+        <Link
+          href="/logs"
           onClick={() => setActiveComponent("logs")}
           className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
         >
@@ -200,11 +200,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
             ></path>
           </svg>
           Logs
-        </a>
+        </Link>
 
         {/* Map Link */}
-        <a
-          href="#"
+        <Link
+          href="/user/map/"
           onClick={() => setActiveComponent("map")}
           className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-white text-lg"
         >
@@ -234,11 +234,12 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
             </g>
           </svg>
           Map
-        </a>
+        </Link>
 
         {/* Temporary Veterinary Link */}
-        <a
-          href="#"
+        <Link
+          href="/vet"
+          onClick={() => setActiveComponent("vet")}
           className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
         >
           <svg
@@ -254,7 +255,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
             ></path>
           </svg>
           Vet UI
-        </a>
+        </Link>
       </nav>
 
       {/* Underline */}

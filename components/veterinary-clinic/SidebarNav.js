@@ -10,8 +10,17 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { useState } from 'react'; // Import useState
 
 export default function SidebarNav({ sidebarOpen, setSidebarOpen, navItems }) {
+  // State to track the active navigation item
+  const [activeNav, setActiveNav] = useState(navItems.find((item) => item.current)?.name || '');
+
+  // Function to handle navigation item clicks
+  const handleNavClick = (name) => {
+    setActiveNav(name); // Update the active navigation item
+  };
+
   return (
     <>
       {/* Mobile sidebar overlay */}
@@ -28,45 +37,43 @@ export default function SidebarNav({ sidebarOpen, setSidebarOpen, navItems }) {
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between h-16 flex-shrink-0 px-4 bg-gray-900 border-b border-gray-800">
-          <div className="flex items-center space-x-2">
-            <Image
-              src="/image/Logoblue.png" // Replace with your vet clinic logo
-              alt="SymptoVet Logo"
-              width={40}
-              height={40}
-              className="w-10 h-10"
-            />
-            <h1 className="text-xl font-bold text-white">
-              <span className="text-white">Sympto</span>
-              <span className="text-blue-500">Vet</span>
-            </h1>
-          </div>
-          <button
-            className="h-10 w-10 flex items-center justify-center text-gray-400 hover:text-white focus:outline-none"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <XMarkIcon className="h-6 w-6" />
-          </button>
+        {/* Logo and Name */}
+        <div className="p-4 flex flex-col items-center">
+          <Image
+            src="/image/Logoblue.png" // Replace with your vet clinic logo
+            alt="SymptoVet Logo"
+            width={112}
+            height={112}
+            className="w-28 h-28"
+          />
+          <span className="text-3xl font-bold mt-4">
+            <span className="text-white">Sympto</span>
+            <span className="text-blue-500">Vet</span>
+          </span>
         </div>
+
+        {/* Navigation Links */}
         <div className="flex-1 overflow-y-auto pt-5 pb-4">
           <nav className="mt-5 px-2 space-y-1">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
-                  item.current
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-300 hover:bg-blue-500 hover:text-white'
+                onClick={() => handleNavClick(item.name)} // Update active state on click
+                className={`group flex items-center px-4 py-3 text-lg font-medium rounded-md ${
+                  activeNav === item.name
+                    ? 'bg-blue-500 text-white' // Active state
+                    : 'text-gray-300 hover:bg-blue-500 hover:text-white' // Inactive state
                 }`}
               >
                 <item.icon
-                  className={`mr-4 h-6 w-6 ${
-                    item.current ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                  className={`mr-4 h-8 w-8 ${
+                    activeNav === item.name
+                      ? 'text-white' // Active state
+                      : 'text-blue-500 group-hover:text-white' // Inactive state
                   }`}
                 />
-                {item.name}
+                <span>{item.name}</span>
               </a>
             ))}
           </nav>
@@ -76,39 +83,43 @@ export default function SidebarNav({ sidebarOpen, setSidebarOpen, navItems }) {
       {/* Desktop sidebar */}
       <div className="hidden lg:flex lg:flex-shrink-0">
         <div className="flex flex-col w-64 bg-gray-900">
-          <div className="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900 border-b border-gray-800">
-            <div className="flex items-center space-x-2">
-              <Image
-                src="/image/Logoblue.png" // Replace with your vet clinic logo
-                alt="SymptoVet Logo"
-                width={40}
-                height={40}
-                className="w-10 h-10"
-              />
-              <h1 className="text-2xl font-bold text-white">
-                <span className="text-white">Sympto</span>
-                <span className="text-blue-500">Vet</span>
-              </h1>
-            </div>
+          {/* Logo and Name */}
+          <div className="p-4 flex flex-col items-center">
+            <Image
+              src="/image/Logoblue.png" // Replace with your vet clinic logo
+              alt="SymptoVet Logo"
+              width={112}
+              height={112}
+              className="w-28 h-28"
+            />
+            <span className="text-3xl font-bold mt-4">
+              <span className="text-white">Sympto</span>
+              <span className="text-blue-500">Vet</span>
+            </span>
           </div>
+
+          {/* Navigation Links */}
           <div className="flex-1 flex flex-col overflow-y-auto">
             <nav className="flex-1 px-2 py-4 space-y-1">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                    item.current
-                      ? 'bg-blue-500 text-white'
-                      : 'text-gray-300 hover:bg-blue-500 hover:text-white'
+                  onClick={() => handleNavClick(item.name)} // Update active state on click
+                  className={`group flex items-center px-4 py-3 text-lg rounded-md ${
+                    activeNav === item.name
+                      ? 'bg-blue-500 text-white' // Active state
+                      : 'text-white hover:bg-blue-500 hover:text-white' // Inactive state
                   }`}
                 >
                   <item.icon
-                    className={`mr-3 h-6 w-6 ${
-                      item.current ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                    className={`mr-4 h-8 w-8 ${
+                      activeNav === item.name
+                        ? 'text-white' // Active state
+                        : 'text-blue-500 group-hover:text-white' // Inactive state
                     }`}
                   />
-                  {item.name}
+                  <span>{item.name}</span>
                 </a>
               ))}
             </nav>
