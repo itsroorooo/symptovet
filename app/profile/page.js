@@ -2,11 +2,27 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import ProfilePage from "./ProfilePage";  
+import ProfilePage from "./ProfilePage";
 import Link from "next/link";
+import SymptomsList from "../user/dashboard/SymptomList"; // Import SymptomsList component
+import VetMap from "../user/dashboard/VetMap"; // Import VetMap component
 
 const Dashboard = () => {
-  const [requiredEquipment, setRequiredEquipment] = useState([]);
+  const [activeComponent, setActiveComponent] = useState("home"); // Define active component state
+  const [avatar, setAvatar] = useState("/image/default-avatar.png"); // State for avatar
+
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case "symptoms":
+        return <SymptomsList />;
+      case "map":
+        return <VetMap />; // Render VetMap
+      case "profile":
+        return <ProfilePage onPhotoChange={setAvatar} />; // Pass callback to update avatar
+      default:
+        return <div>Home Content</div>;
+    }
+  };
 
   return (
     <div className="font-[Poppins] h-screen">
@@ -20,7 +36,7 @@ const Dashboard = () => {
           {/* Logo */}
           <div className="p-4">
             <Image
-              src="/Logoblue.png"
+              src="/image/Logoblue.png" // Use a leading slash to reference the file in the public folder
               alt="SymptoVet Logo"
               width={112}
               height={112}
@@ -40,6 +56,7 @@ const Dashboard = () => {
             {/* Home Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("home")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -60,6 +77,7 @@ const Dashboard = () => {
             {/* Pet Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("pet")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -83,11 +101,50 @@ const Dashboard = () => {
               Pet
             </a>
 
-            
+            {/* Symptoms Link */}
+            <a
+              href="#"
+              onClick={() => setActiveComponent("symptoms")}
+              className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
+            >
+              <svg
+                className="w-6 h-6 mr-3 transition duration-200 group-hover:stroke-white"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                  stroke="#2196F3"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition duration-200 group-hover:stroke-white"
+                ></path>
+                <path
+                  d="M12 8V16"
+                  stroke="#2196F3"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition duration-200 group-hover:stroke-white"
+                ></path>
+                <path
+                  d="M8 12H16"
+                  stroke="#2196F3"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition duration-200 group-hover:stroke-white"
+                ></path>
+              </svg>
+              Symptoms
+            </a>
 
             {/* Appointment Link */}
             <a
               href="#"
+              onClick={() => setActiveComponent("appointment")}
               className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
@@ -166,13 +223,14 @@ const Dashboard = () => {
             {/* Map Link */}
             <a
               href="#"
-              className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-white text-lg"
+              onClick={() => setActiveComponent("map")}
+              className="group flex items-center py-3 px-6 rounded transition duration-200 hover:bg-blue-500 text-lg text-white"
             >
               <svg
                 className="w-6 h-6 mr-3 transition duration-200 group-hover:stroke-white"
                 viewBox="0 0 24 24"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="http://www.w3.org/20000/svg"
               >
                 <g>
                   <path
@@ -196,8 +254,6 @@ const Dashboard = () => {
               Map
             </a>
 
-
-            
             {/* Temporary Veterinary Link */}
             <a
                 href="#"
@@ -218,9 +274,7 @@ const Dashboard = () => {
                 Vet UI
             </a>
 
-
           </nav>
-
 
           {/* Underline */}
           <div className="flex items-center justify-center my-6 mt-28">
@@ -259,7 +313,7 @@ const Dashboard = () => {
               {/* Avatar Button */}
               <label htmlFor="dropdownToggle">
                 <Image
-                  src="/images/avatar.jpg"
+                  src={avatar} // Use updated avatar
                   alt="Avatar dropdown"
                   width={48}
                   height={48}
@@ -279,12 +333,13 @@ const Dashboard = () => {
                   aria-labelledby="dropdownToggle"
                 >
                   <li>
-                    <Link
-                      href="/profile"
+                    <a
+                      href="#"
+                      onClick={() => setActiveComponent("profile")}
                       className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >
                       Profile
-                    </Link>
+                    </a>
                   </li>
                   <li>
                     <a
@@ -319,7 +374,9 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <ProfilePage onSubmit={setRequiredEquipment} />
+      <div className="flex-1 flex justify-center items-center ml-0 md:ml-60 p-6">
+        {renderComponent()}
+      </div>
     </div>
   );
 };
