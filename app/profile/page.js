@@ -4,8 +4,8 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import ProfilePage from "./ProfilePage";
 import Link from "next/link";
-import SymptomsList from "../user/dashboard/SymptomList"; // Import SymptomsList component
-import VetMap from "../user/dashboard/VetMap"; // Import VetMap component
+import SymptomsList from "../user/symptoms/page"; // Import SymptomsList component
+import VetMap from "../user/map/page"; // Import VetMap component
 
 const Dashboard = () => {
   const [activeComponent, setActiveComponent] = useState("home"); // Define active component state

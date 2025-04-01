@@ -13,6 +13,12 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, setActiveComponent }) => {
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       } md:translate-x-0 z-40`}
     >
+      <button
+        onClick={toggleSidebar}
+        className="p-4 text-white md:hidden"
+      >
+        Close
+      </button>
       {/* Logo */}
       <div className="p-4">
         <Image
