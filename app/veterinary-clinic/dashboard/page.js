@@ -13,7 +13,6 @@ import Header from "../../../components/veterinary-clinic/Header";
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(3);
 
   // Navigation items
   const navItems = [
